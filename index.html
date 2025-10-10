@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>مجله علوم انسانی — نسخه ادیتوریال خلاق (سپیا)</title>
+  <meta name="description" content="مجله علوم انسانی با هویت بصری خلاق، کاور ژنراتیو، پاورقی هوشمند و صفحه مقاله خوانا — فقط HTML/CSS/JS" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Fonts: Vazirmatn (body & headings), Lateef (ornamental dropcap) -->
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..900&family=Lateef&display=swap" rel="stylesheet">
+  <style>
+    /* ============ Design Tokens ============ */
+    :root {
+      --ink: #20201F;
+      --paper: #F5EFE3;      /* sepia paper */
+      --surface: #FFFCF7;
+      --accent: #1E3A8A;     /* deep blue */
+      --accent-2: #C09A3D;   /* gold */
+      --muted: #6B7280;
+      --grid: rgba(0,0,0,.06);
+      --shadow: 0 10px 26px rgba(0,0,0,.08);
+      --radius: 14px;
+
+      --font-body: "Vazirmatn", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Naskh Arabic", sans-serif;
+      --font-heading: "Vazirmatn", var(--font-body);
+      --font-ornament: "Lateef", var(--font-body);
+
+      --size-body: 18px;
+      --line-body: 1.9;
+
+      --speed-fast: 120ms;
+      --speed-base: 180ms;
+      --easing: cubic-bezier(.2,.8,.2,1);
+
+      --container: min(94vw, 1080px);
+      --marginalia: 280px; /* sidebar width on desktop */
+    }
+
+    /* ============ Base/Reset ============ */
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:var(--font-body);
+      font-size:var(--size-body);
+      line-height:var(--line-body);
+      text-rendering:optimizeLegibility;
+    }
+
+    /* Ensure fonts apply to form controls */
+    input, select, textarea, button {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--grid);
+      border-radius: 12px;
+      padding: 10px 12px;
+      appearance: none;
+    }
+    select { padding-inline-end: 28px; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 18px) 16px, calc(100% - 12px) 16px; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; }
+    textarea { resize: vertical; }
+
+    img,svg,video{max-width:100%;height:auto}
+    a{color:var(--accent); text-decoration-thickness: from-font; text-underline-offset: 2px}
+    code,kbd,pre{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace}
+    :focus-visible{outline:2px solid var(--accent-2); outline-offset:2px}
+
+    /* Skip link */
+    .skip{position:absolute; inset-inline-start:0; inset-block-start:-40px; background:var(--accent); color:#fff; padding:.45rem .6rem; border-radius:10px; z-index:999}
+    .skip:focus{inset-block-start:8px}
+
+    /* Layout */
+    .container{inline-size:var(--container); margin-inline:auto; padding-inline:16px}
+    header.site{
+      position:sticky; inset-block-start:0; z-index:50;
+      background:color-mix(in oklab, var(--paper) 92%, var(--surface) 8%);
+      backdrop-filter:saturate(1.1) blur(6px);
+      border-block-end:1px solid var(--grid);
+    }
+    .topbar{display:flex; align-items:center; gap:10px; justify-content:space-between; padding:10px 0}
+    .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit}
+    .logo{
+      inline-size:36px; block-size:36px; border-radius:10px; display:grid; place-items:center;
+      background: conic-gradient(from 120deg, var(--accent), var(--accent-2));
+      color:#fff; font-weight:800; font-family: var(--font-heading);
+      box-shadow: var(--shadow);
+    }
+    .brand-title{font-family:var(--font-heading); font-weight:800; letter-spacing:-.3px; font-size:1.1rem}
+    nav.primary{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+    nav.primary a{color:inherit; text-decoration:none; padding:8px 10px; border-radius:10px}
+    nav.primary a:hover{background:var(--grid)}
+
+    /* Hero / Generative cover */
+    .hero{padding-block:18px 24px; border-block-end:1px solid var(--grid)}
+    .cover{
+      position:relative; border-radius:18px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow);
+      display:grid; grid-template-columns: 1.15fr .85fr; gap:0;
+      min-block-size: 340px;
+    }
+    @media (max-width: 900px){ .cover{grid-template-columns:1fr} }
+    .cover .visual{position:relative; isolation:isolate}
+    .cover .meta{padding:18px 18px 16px 18px; display:flex; flex-direction:column; gap:10px}
+    .badge{display:inline-flex; align-items:center; gap:8px; background:color-mix(in oklab, var(--accent) 12%, var(--surface)); color:inherit; border:1px solid var(--grid); padding:6px 10px; border-radius:999px}
+    .cover h1{font-family:var(--font-heading); font-weight:800; font-size: clamp(22px, 3.8vw, 40px); line-height:1.25; letter-spacing:-.2px; margin:6px 0}
+    .sub{color:var(--muted)}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{background:color-mix(in oklab, var(--accent) 10%, var(--surface)); padding:4px 10px; border-radius:999px; font-size:.92rem}
+    .btn{
+      border:1px solid var(--grid); background:var(--surface); color:inherit; border-radius:12px; padding:8px 12px; cursor:pointer;
+      transition: transform var(--speed-fast) var(--easing), background var(--speed-base);
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:color-mix(in oklab, var(--accent) 12%, var(--surface)); border-color:color-mix(in oklab, var(--accent) 35%, var(--surface))}
+
+    /* Dossiers carousel (with generative symbols) */
+    .dossiers{margin-block:22px 8px}
+    .dossiers h2{font-family:var(--font-heading); letter-spacing:-.2px; font-size: clamp(18px, 2.8vw, 26px)}
+    .hstack{display:flex; gap:14px; overflow:auto; padding:6px; scroll-snap-type:x mandatory}
+    .card-tall{
+      scroll-snap-align:start; min-inline-size:220px; inline-size:220px; block-size:320px; border-radius:16px; overflow:hidden; background:var(--surface); border:1px solid var(--grid); box-shadow: var(--shadow);
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .symbol-tiles{inline-size:100%; block-size:58%; background:var(--surface)}
+    .card-tall .body{padding:12px 14px}
+    .card-tall h3{font-family:var(--font-heading); margin:0 0 6px 0; font-size:1.04rem}
+    .card-tall small{color:var(--muted)}
+    .card-tall a{align-self:flex-start; margin:0 0 12px 12px}
+
+    /* Archive */
+    .archive{padding-block:22px; border-block:1px solid var(--grid)}
+    .archive h2{font-family:var(--font-heading); font-size: clamp(18px, 2.8vw, 26px)}
+    .filters{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-block-end:14px}
+    .filters .field{display:flex; gap:8px; align-items:center; background:var(--surface); border:1px solid var(--grid); border-radius:12px; padding:6px 10px}
+    .filters input[type="search"]{border:none; padding:6px; outline:none; background:transparent}
+    .grid{display:grid; grid-template-columns: repeat(3, 1fr); gap:14px}
+    @media (max-width: 1024px){ .grid{grid-template-columns: repeat(2, 1fr)} }
+    @media (max-width: 640px){ .grid{grid-template-columns: 1fr} }
+    .card{
+      border:1px solid var(--grid); background:var(--surface); border-radius:16px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; box-shadow:var(--shadow)
+    }
+    .meta-row{display:flex; gap:10px; align-items:center; justify-content:space-between}
+    .tag{font-size:.9rem; padding:4px 10px; border-radius:999px; background:color-mix(in oklab, var(--accent) 8%, var(--surface))}
+    .kicker{color:var(--muted); font-size:.92rem}
+    .id-pill{font-family: ui-monospace, "Roboto Mono", monospace; background:color-mix(in oklab, var(--accent-2) 15%, var(--surface)); border-radius:999px; padding:2px 8px}
+    .card h4{margin:.2rem 0; font-family:var(--font-heading); letter-spacing:-.2px}
+    .card .actions{display:flex; gap:10px; flex-wrap:wrap}
+
+    /* Article layout with marginalia */
+    .article-wrap{position:relative; display:grid; grid-template-columns: 1fr minmax(0, var(--marginalia)); gap:18px; align-items:start}
+    @media (max-width: 1100px){ .article-wrap{grid-template-columns: 1fr} }
+    article{
+      background:var(--surface); border:1px solid var(--grid); border-radius:16px; padding:16px; box-shadow:var(--shadow)
+    }
+    article h1{font-family:var(--font-heading); font-weight:800; font-size: clamp(22px, 3.5vw, 38px); margin:0 0 6px 0; letter-spacing:-.2px}
+    .byline{color:var(--muted); display:flex; flex-wrap:wrap; gap:10px; align-items:center; font-size:.98rem}
+    .doi{font-family: ui-monospace, "Roboto Mono", monospace; background:color-mix(in oklab, var(--accent) 8%, var(--surface)); padding:2px 8px; border-radius:999px}
+    .tools-row{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-block:8px 12px}
+    .dropcap p:first-of-type::first-letter{
+      font-family: var(--font-ornament);
+      float:inline-start; font-size:3.2em; line-height:.9; padding-inline:8px; margin-inline-end:6px; color:var(--accent-2)
+    }
+    blockquote{
+      margin: 1rem 0; padding: .2rem 1rem;
+      border-inline-start: 4px solid var(--accent);
+      background: color-mix(in oklab, var(--accent) 6%, var(--surface));
+      border-radius: 8px;
+    }
+
+    /* Marginalia / Side-notes & footnotes */
+    aside.notes{
+      position:sticky; top:84px; max-block-size: calc(100dvh - 100px); overflow:auto;
+      background:var(--surface); border:1px solid var(--grid); border-radius:16px; padding:10px; box-shadow:var(--shadow)
+    }
+    .notes h3{margin:4px 0 10px 0; font-size:1rem}
+    .fn-item{font-size:.95rem; border-block-end:1px dashed var(--grid); padding-block:8px}
+    .fn-item:last-child{border:none}
+    .fn-ref{
+      color:var(--accent); text-decoration:none; border-bottom:1px dotted currentColor; padding-inline:2px; cursor:pointer
+    }
+    .fn-pop{
+      position:absolute; z-index:40; inline-size:min(38ch, 92vw); background:var(--surface); border:1px solid var(--grid); border-radius:12px; padding:10px; box-shadow:var(--shadow); display:none
+    }
+
+    /* Bottom Sheet for footnotes (mobile) */
+    .sheet{
+      position:fixed; inset: auto 0 0 0; background:var(--surface); border-radius:16px 16px 0 0; box-shadow: var(--shadow);
+      transform: translateY(100%); transition: transform var(--speed-base) var(--easing); z-index:100
+    }
+    .sheet.active{transform: translateY(0)}
+    .sheet .handle{inline-size:56px; block-size:5px; background:var(--grid); border-radius:99px; margin:8px auto}
+    .sheet header{display:flex; justify-content:space-between; padding:6px 12px 0 12px}
+    .sheet .content{padding:12px; max-block-size:56dvh; overflow:auto}
+
+    /* Reading progress bar (edge) */
+    .progress{
+      position:fixed; inset-block-start:0; inset-inline-end:0; inline-size:4px; block-size:0;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      border-radius:0 0 0 4px; z-index:90
+    }
+
+    /* Footer */
+    footer{margin-block:22px; color:var(--muted); font-size:.95rem}
+
+    /* Motion preferences */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important; transition:none!important; scroll-behavior:auto!important}
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">پرش به محتوا</a>
+  <div class="progress" aria-hidden="true"></div>
+
+  <header class="site">
+    <div class="container topbar">
+      <a class="brand" href="#home" aria-label="صفحه نخست">
+        <div class="logo" aria-hidden="true">[ ]</div>
+        <div class="brand-title">مجله علوم انسانی</div>
+      </a>
+
+      <nav class="primary" aria-label="ناوبری اصلی">
+        <a href="#home">خانه</a>
+        <a href="#archive">آرشیو</a>
+        <a href="#article">مقاله ویژه</a>
+        <a href="#submit">ارسال مقاله</a>
+        <a href="#policies">سیاست‌ها</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <!-- Home / Hero -->
+    <section id="home" class="hero" aria-labelledby="home-title">
+      <div class="cover" role="img" aria-label="کاور ژنراتیو: موج چهارم انقلاب صنعتی">
+        <div class="visual" id="genCover" aria-hidden="true"></div>
+        <div class="meta">
+          <span class="badge"><span aria-hidden="true">★</span> پرونده ویژه: «انقلاب هوش مصنوعی»</span>
+          <h1 id="home-title">((تولید بدون انسان، بازار بدون تقاضا))</h1>
+          <p class="sub">روایتی از موج چهارم انقلاب صنعتی و پیامدهای آن بر کار، تقاضا و سیاست‌گذاری — از ربات‌مالیاتی تا درآمد پایه همگانی.</p>
+          <div class="chips" aria-label="کلیدواژه‌ها">
+            <span class="chip">هوش مصنوعی</span>
+            <span class="chip">انقلاب صنعتی چهارم</span>
+            <span class="chip">بازار کار</span>
+            <span class="chip">درآمد پایه همگانی</span>
+          </div>
+          <div class="tools-row">
+            <a class="btn primary" href="#article">مطالعه مقاله</a>
+            <a class="btn" href="#archive">مشاهده آرشیو</a>
+            <span class="kicker">نمایه: DOI • ORCID • OAI-PMH • Schema.org</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dossiers" aria-labelledby="dossier-title">
+        <h2 id="dossier-title">پرونده‌های ویژه</h2>
+        <div class="hstack" role="list">
+          <article class="card-tall" role="listitem">
+            <div class="symbol-tiles" data-seed="ai-society"></div>
+            <div class="body">
+              <h3>هوش مصنوعی و جامعه</h3>
+              <small>بهار ۱۴۰۴</small>
+            </div>
+            <a class="btn" href="#archive">مشاهده</a>
+          </article>
+          <article class="card-tall" role="listitem">
+            <div class="symbol-tiles" data-seed="future-of-work"></div>
+            <div class="body">
+              <h3>آینده کار</h3>
+              <small>زمستان ۱۴۰۳</small>
+            </div>
+            <a class="btn" href="#archive">مشاهده</a>
+          </article>
+          <article class="card-tall" role="listitem">
+            <div class="symbol-tiles" data-seed="welfare-policy"></div>
+            <div class="body">
+              <h3>سیاست رفاهی نو</h3>
+              <small>پاییز ۱۴۰۳</small>
+            </div>
+            <a class="btn" href="#archive">مشاهده</a>
+          </article>
+          <article class="card-tall" role="listitem">
+            <div class="symbol-tiles" data-seed="education-4"></div>
+            <div class="body">
+              <h3>آموزش در عصر AI</h3>
+              <small>تابستان ۱۴۰۳</small>
+            </div>
+            <a class="btn" href="#archive">مشاهده</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Archive -->
+    <section id="archive" class="archive" aria-labelledby="archive-title">
+      <h2 id="archive-title">آرشیو مقالات</h2>
+      <div class="filters" role="search">
+        <label class="field">
+          <span>جستجو</span>
+          <input id="q" type="search" placeholder="عنوان، نویسنده یا کلیدواژه…" aria-label="جستجو در آرشیو" />
+        </label>
+        <label class="field">
+          <span>موضوع</span>
+          <select id="f-subject" aria-label="فیلتر موضوع">
+            <option value="">همه</option>
+            <option>اقتصاد</option>
+            <option>فلسفه</option>
+            <option>جامعه‌شناسی</option>
+            <option>سیاست‌گذاری</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>سال</span>
+          <select id="f-year" aria-label="فیلتر سال">
+            <option value="">همه</option>
+            <option>۱۴۰۴</option>
+            <option>۱۴۰۳</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>نوع</span>
+          <select id="f-type" aria-label="فیلتر نوع">
+            <option value="">همه</option>
+            <option value="research">پژوهشی</option>
+            <option value="review">مرور</option>
+            <option value="essay">جستار</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="grid" id="cards">
+        <div class="card" data-title="تولید بدون انسان بازار بدون تقاضا" data-auth="گروه تحریریه" data-keywords="هوش مصنوعی, انقلاب صنعتی چهارم, تقاضای کل" data-subject="اقتصاد" data-year="۱۴۰۴" data-type="essay">
+          <div class="meta-row">
+            <span class="tag">اقتصاد</span>
+            <span class="id-pill">HM-2025-100</span>
+          </div>
+          <h4>((تولید بدون انسان، بازار بدون تقاضا))</h4>
+          <div class="kicker">گروه تحریریه • ۱۴۰۴ • جستار</div>
+          <p>AI بهره‌وری را اوج می‌دهد، اما اگر انسان‌ها از چرخه درآمد خارج شوند، تقاضای کل فرو می‌پاشد.</p>
+          <div class="actions">
+            <a class="btn" href="#article">مطالعه</a>
+          </div>
+        </div>
+
+        <div class="card" data-title="مالیات بر ربات و درآمد پایه" data-auth="نوشین قربانی" data-keywords="درآمد پایه, سیاست رفاهی, مالیات بر ربات" data-subject="سیاست‌گذاری" data-year="۱۴۰۳" data-type="review">
+          <div class="meta-row">
+            <span class="tag">سیاست‌گذاری</span>
+            <span class="id-pill">HM-2024-221</span>
+          </div>
+          <h4>مالیات بر ربات و درآمد پایه: مسیرهای بازتوزیع</h4>
+          <div class="kicker">نوشین قربانی • ۱۴۰۳ • مرور</div>
+          <p>تحلیل ابزارهای سیاستی برای حفظ تقاضای کل و رفاه در عصر اتوماسیون.</p>
+          <div class="actions">
+            <a class="btn" href="#article">مطالعه</a>
+          </div>
+        </div>
+
+        <div class="card" data-title="اخلاق جایگزینی انسانی" data-auth="مانی شریفی" data-keywords="اخلاق فناوری, کار, منزلت" data-subject="فلسفه" data-year="۱۴۰۴" data-type="research">
+          <div class="meta-row">
+            <span class="tag">فلسفه</span>
+            <span class="id-pill">HM-2025-045</span>
+          </div>
+          <h4>اخلاق جایگزینی: منزلت، کار و ماشین</h4>
+          <div class="kicker">مانی شریفی • ۱۴۰۴ • پژوهشی</div>
+          <p>پیامدهای اخلاقی حذف کار انسانی و نسبت آن با کرامت و خودتحققی.</p>
+          <div class="actions">
+            <a class="btn" href="#article">مطالعه</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Article -->
+    <section id="article" aria-labelledby="article-title" style="margin-block:22px">
+      <div class="article-wrap">
+        <article class="dropcap" itemscope itemtype="https://schema.org/ScholarlyArticle">
+          <header>
+            <h1 id="article-title" itemprop="headline">تولید بدون انسان، بازار بدون تقاضا</h1>
+            <div class="byline">
+              <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+                <span itemprop="name">گروه تحریریه</span>
+              </span>
+              <span>•</span>
+              <span itemprop="datePublished" content="2025-03-21">۱ فروردین ۱۴۰۴</span>
+              <span class="doi" itemprop="identifier">DOI: 10.1234/hmj.2025.100</span>
+            </div>
+            <div class="tools-row">
+              <button id="citeBtn" class="btn" aria-expanded="false">Cite</button>
+              <a class="btn" href="#" role="button">دانلود PDF</a>
+              <span class="kicker">کلیدواژه‌ها: هوش مصنوعی • انقلاب صنعتی • تقاضای کل • درآمد پایه</span>
+            </div>
+          </header>
+
+          <!-- Cite Popover -->
+          <div id="citePop" class="cite-pop" role="dialog" aria-modal="false" aria-labelledby="citeTitle">
+            <header>
+              <strong id="citeTitle">استناد</strong>
+              <div class="segmented" role="tablist" aria-label="سبک استناد" style="display:flex; gap:8px">
+                <button class="c-style btn" role="tab" aria-selected="true" data-style="apa">APA</button>
+                <button class="c-style btn" role="tab" aria-selected="false" data-style="chicago">Chicago</button>
+                <button class="c-style btn" role="tab" aria-selected="false" data-style="mla">MLA</button>
+              </div>
+            </header>
+            <pre id="citeText" style="margin-top:8px"></pre>
+            <div class="tools-row">
+              <button id="copyCite" class="btn">کپی</button>
+              <button id="dlBib" class="btn">دانلود BibTeX</button>
+              <button id="dlRIS" class="btn">دانلود RIS</button>
+            </div>
+          </div>
+
+          <p itemprop="abstract">
+            انقلاب صنعتی طی چند موج، شیوه‌های تولید و زیست بشر را دگرگون کرده است؛ و اکنون موج چهارم با «انقلاب هوش مصنوعی» نه صرفاً بخشی از تولید، که کلیت کار انسانی را تهدید می‌کند
+            <a href="#fn1" class="fn-ref" data-fn="1" role="doc-noteref" aria-label="پاورقی ۱">[1]</a>.
+            این تحولات اگر با سیاست بازتوزیعی همراه نشوند، می‌توانند به «فروپاشی تقاضا»
+            <a href="#fn2" class="fn-ref" data-fn="2" aria-label="پاورقی ۲">[2]</a>
+            و شکست بازار بینجامند.
+          </p>
+
+          <h3>موج‌های پیاپی انقلاب صنعتی</h3>
+          <p>
+            نخستین موج در ۱۷۶۹ با ماشین بخار آغاز شد؛ موج دوم در اواخر قرن نوزدهم با برق و مونتاژ، تولید انبوه را ممکن ساخت؛ موج سوم از دهۀ ۱۹۶۰ با دیجیتال‌سازی، بهره‌وری و کنترل را ارتقا داد. امروز موج چهارم با محوریت هوش مصنوعی، از صنایع خاص فراتر رفته و به قلب خدمات و مدیریت وارد شده است.
+          </p>
+
+          <h3>تهدید کلیت کار انسانی</h3>
+          <p>
+            تفاوت بنیادین موج کنونی با گذشته این است که هوش مصنوعی نه‌تنها مشاغل موجود را حذف می‌کند، بلکه مشاغل تازه را نیز سریع تسخیر می‌کند. حتی «اپراتوری هوش مصنوعی» هم پایدار نمی‌ماند. بهره‌وری بالاتر و هزینه کمتر برای بنگاه‌ها، گرایشی قوی به جایگزینی انسان ایجاد می‌کند.
+          </p>
+
+          <h3>اقتصادِ کارآمدیِ اشباع و بحران تقاضا</h3>
+          <p>
+            در مراحل اولیه، رشد اقتصادی ممکن است ادامه یابد؛ اما به نقطۀ «اشباع کارآمدی» که برسیم، حوزه‌ای برای کار انسانی باقی نمی‌ماند. در نتیجه انبوهی از انسان‌ها از چرخه درآمد خارج می‌شوند و «نیروی انسانی بلااستفاده» شکل می‌گیرد؛ گروهی که نقشی در تقاضای کل ندارند. کالای فراوان هست، اما مصرف‌کننده‌ای نیست: «فروپاشی تقاضا»
+            <a href="#fn2" class="fn-ref" data-fn="2" aria-label="پاورقی ۲">[2]</a>.
+          </p>
+
+          <blockquote>
+            بازار بدون تقاضا، نه فقط کارگران که تولیدکنندگان و سرمایه‌داران را نیز متضرر می‌کند؛ کارآمدی بی‌سیاست، کارآمدیِ بی‌خریدار است.
+          </blockquote>
+
+          <h3>مداخله دولت: از ربات‌مالیاتی تا درآمد پایه</h3>
+          <p>
+            بدون مداخله هوشمندانه، شکست بازار محتمل است. ابزارهایی مانند «درآمد پایه همگانی»، «مالیات بر ربات»، «بازتوزیع عادلانه ثروت ناشی از فناوری» و قواعد استفاده از AI می‌توانند تعادل را حفظ کنند
+            <a href="#fn3" class="fn-ref" data-fn="3" aria-label="پاورقی ۳">[3]</a>.
+            پرسشِ سیاستیِ کلیدی این است: چگونه بهره‌وریِ هوش مصنوعی را به تقاضای مؤثر تبدیل کنیم؟
+          </p>
+        </article>
+
+        <!-- Marginalia -->
+        <aside class="notes" aria-label="حاشیه‌نویسی و پاورقی">
+          <h3>پاورقی‌ها</h3>
+          <ol id="footnotes">
+            <li id="fn1" class="fn-item" role="doc-footnote"><strong>۱.</strong> «انقلاب هوش مصنوعی» در این متن به موجی اطلاق می‌شود که فراتر از اتوماسیون بخشی، به جایگزینی فراگیر کار انسانی گرایش دارد.</li>
+            <li id="fn2" class="fn-item" role="doc-footnote"><strong>۲.</strong> «فروپاشی تقاضا» وضعیتی است که در آن، به‌دلیل کاهش گسترده درآمدهای کاری، تقاضای کل برای کالا و خدمات افت می‌کند.</li>
+            <li id="fn3" class="fn-item" role="doc-footnote"><strong>۳.</strong> ایده‌های سیاستی: درآمد پایه همگانی (UBI)، مالیات بر ربات، سهیم‌سازی همگانی در سود فناوری و تنظیم‌گری استفاده از AI.</li>
+          </ol>
+        </aside>
+      </div>
+
+      <!-- Mobile Bottom Sheet for footnotes -->
+      <div class="sheet" id="fnSheet" role="dialog" aria-modal="true" aria-labelledby="fnTitle">
+        <div class="handle" aria-hidden="true"></div>
+        <header>
+          <strong id="fnTitle">پاورقی</strong>
+          <button class="btn" id="closeSheet" aria-label="بستن">بستن</button>
+        </header>
+        <div class="content" id="fnContent"></div>
+      </div>
+
+      <!-- Related -->
+      <div class="grid" style="margin-block:14px">
+        <div class="card">
+          <div class="meta-row"><span class="tag">سیاست‌گذاری</span><span class="id-pill">HM-2025-101</span></div>
+          <h4>اقتصادِ بدون دستمزد: چه کسی می‌خرد؟</h4>
+          <p>از بهره‌وری تا تقاضای مؤثر: سازوکارهای انتقال.</p>
+          <a class="btn" href="#article">مطالعه</a>
+        </div>
+        <div class="card">
+          <div class="meta-row"><span class="tag">جامعه‌شناسی</span><span class="id-pill">HM-2025-102</span></div>
+          <h4>منزلت اجتماعی در عصر اتوماسیون</h4>
+          <p>شغل، هویت و بازتعریف کرامت.</p>
+          <a class="btn" href="#article">مطالعه</a>
+        </div>
+        <div class="card">
+          <div class="meta-row"><span class="tag">فلسفه</span><span class="id-pill">HM-2025-103</span></div>
+          <h4>معنای کار؛ از ضرورت تا خودتحققی</h4>
+          <p>مروری بر رویکردهای هنجاری به کار انسانی.</p>
+          <a class="btn" href="#article">مطالعه</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Submit -->
+    <section id="submit" aria-labelledby="submit-title" style="padding-block:22px; border-block-start:1px solid var(--grid)">
+      <h2 id="submit-title" style="font-family:var(--font-heading); font-size: clamp(18px, 2.8vw, 26px)">ارسال مقاله</h2>
+      <p>پیش از ارسال، «راهنمای نویسندگان» را مطالعه کنید و فایل را بدون مشخصات هویتی آماده نمایید.</p>
+      <form onsubmit="event.preventDefault()" aria-describedby="submitHelp" style="background:var(--surface); border:1px solid var(--grid); border-radius:16px; padding:14px; box-shadow:var(--shadow)">
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <label>نام نویسنده
+            <input required placeholder="نام و نام خانوادگی"/>
+          </label>
+          <label>ORCID
+            <input placeholder="0000-0000-0000-0000"/>
+          </label>
+          <label style="grid-column:1/-1">عنوان مقاله
+            <input required placeholder="..."/>
+          </label>
+          <label style="grid-column:1/-1">چکیده
+            <textarea required rows="4" placeholder="۲۰۰-۲۵۰ کلمه"></textarea>
+          </label>
+          <label>نوع مقاله
+            <select>
+              <option>پژوهشی</option>
+              <option>مرور</option>
+              <option>جستار</option>
+              <option>نقد کتاب</option>
+            </select>
+          </label>
+          <label>کلیدواژه‌ها
+            <input placeholder="با ویرگول جدا کنید"/>
+          </label>
+          <label style="grid-column:1/-1">تعارض منافع
+            <input placeholder="ندارد / توضیح دهید"/>
+          </label>
+        </div>
+        <p id="submitHelp" class="kicker">آپلود فایل و گردش‌کار داوری در نسخه عملیاتی (OJS یا سفارشی) فعال می‌شود.</p>
+        <button class="btn" type="submit">ارسال</button>
+      </form>
+    </section>
+
+    <!-- Policies -->
+    <section id="policies" aria-labelledby="policies-title" style="padding-block:22px; border-block-start:1px solid var(--grid)">
+      <h2 id="policies-title" style="font-family:var(--font-heading); font-size: clamp(18px, 2.8vw, 26px)">سیاست‌ها و استانداردها</h2>
+      <ul>
+        <li>داوری دوسوکور؛ بازه پاسخ اولیه: ۴–۶ هفته.</li>
+        <li>دسترسی آزاد با مجوز Creative Commons: CC BY 4.0.</li>
+        <li>DOI (Crossref)، ORCID، ROR؛ فراداده JATS XML و Schema.org.</li>
+        <li>دسترس‌پذیری WCAG 2.1 AA: کنتراست، فوکوس‌پذیری، alt تصاویر.</li>
+        <li>بایگانی بلندمدت: LOCKSS/CLOCKSS (در نسخه عملیاتی).</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p>© ۲۰۲۵ مجله علوم انسانی — محتوا تحت مجوز CC BY 4.0</p>
+    </footer>
+  </main>
+
+  <!-- JSON-LD (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "((تولید بدون انسان، بازار بدون تقاضا))",
+    "author": { "@type": "Organization", "name": "گروه تحریریه" },
+    "datePublished": "2025-03-21",
+    "identifier": "https://doi.org/10.1234/hmj.2025.100",
+    "isPartOf": { "@type": "Periodical", "name": "مجله علوم انسانی" },
+    "inLanguage": "fa",
+    "keywords": ["هوش مصنوعی","انقلاب صنعتی چهارم","بازار کار","درآمد پایه"]
+  }
+  </script>
+
+  <script>
+    ;(function(){
+      // Helpers
+      const $ = (s, r=document)=>r.querySelector(s);
+      const $$ = (s, r=document)=>Array.from(r.querySelectorAll(s));
+
+      // GENERATIVE COVER (SVG)
+      function seededRandom(seed){
+        // xorshift-like from string
+        let h = 2166136261 >>> 0;
+        for(let i=0;i<seed.length;i++){ h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619); }
+        return function(){
+          h += 0x6D2B79F5;
+          let t = Math.imul(h ^ h>>>15, 1 | h);
+          t ^= t + Math.imul(t ^ t>>>7, 61 | t);
+          return ((t ^ t>>>14) >>> 0) / 4294967296;
+        }
+      }
+      function drawCover(){
+        const root = getComputedStyle(document.body);
+        const a = root.getPropertyValue('--accent').trim();
+        const b = root.getPropertyValue('--accent-2').trim();
+        const paper = root.getPropertyValue('--paper').trim();
+        const container = $('#genCover');
+        container.innerHTML = '';
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(svgNS,'svg');
+        svg.setAttribute('viewBox','0 0 800 420');
+        svg.setAttribute('preserveAspectRatio','xMidYMid slice');
+        svg.style.display = 'block';
+        svg.style.inlineSize = '100%';
+        svg.style.blockSize = '100%';
+        const bg = document.createElementNS(svgNS,'rect');
+        bg.setAttribute('width','800'); bg.setAttribute('height','420'); bg.setAttribute('fill', paper);
+        svg.appendChild(bg);
+
+        const rnd = seededRandom('doi:10.1234/hmj.2025.100');
+        // grid of star/girih-like tiles
+        const cols = 16, rows = 8, pad = 10;
+        const w = (800 - pad*2)/cols, h = (420 - pad*2)/rows;
+
+        for(let y=0;y<rows;y++){
+          for(let x=0;x<cols;x++){
+            const cx = pad + x*w + w/2;
+            const cy = pad + y*h + h/2;
+            const r = (Math.min(w,h)/2)*(.5 + rnd()*.4);
+            const g = document.createElementNS(svgNS,'g');
+            g.setAttribute('opacity', 0.45 + rnd()*0.5);
+
+            const sides = 4 + Math.floor(rnd()*4); // 4-7
+            let d = '';
+            for(let i=0;i<sides;i++){
+              const ang = (i/sides)*Math.PI*2 + (x+y)%2*0.15;
+              const rr = r * (i%2 ? 0.5 + rnd()*0.2 : 1);
+              const px = cx + Math.cos(ang)*rr;
+              const py = cy + Math.sin(ang)*rr;
+              d += (i===0?'M':'L')+px+','+py+' ';
+            }
+            d += 'Z';
+            const path = document.createElementNS(svgNS,'path');
+            path.setAttribute('d', d);
+            path.setAttribute('fill', rnd()>.5 ? a : b);
+            path.setAttribute('stroke', 'none');
+            g.appendChild(path);
+
+            if(rnd()>.7){
+              const circ = document.createElementNS(svgNS,'circle');
+              circ.setAttribute('cx', cx);
+              circ.setAttribute('cy', cy);
+              circ.setAttribute('r', r*0.16);
+              circ.setAttribute('fill', rnd()>.5 ? b : a);
+              g.appendChild(circ);
+            }
+            svg.appendChild(g);
+          }
+        }
+        container.appendChild(svg);
+      }
+      drawCover();
+
+      // SYMBOL TILES for Dossiers (mini patterns)
+      function drawMiniSymbols(el, seed){
+        const root = getComputedStyle(document.body);
+        const a = root.getPropertyValue('--accent').trim();
+        const b = root.getPropertyValue('--accent-2').trim();
+        const paper = root.getPropertyValue('--surface').trim();
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(svgNS,'svg');
+        svg.setAttribute('viewBox','0 0 320 180');
+        svg.setAttribute('preserveAspectRatio','xMidYMid slice');
+        svg.style.display = 'block';
+        svg.style.inlineSize = '100%';
+        svg.style.blockSize = '100%';
+        const bg = document.createElementNS(svgNS,'rect');
+        bg.setAttribute('width','320'); bg.setAttribute('height','180'); bg.setAttribute('fill', paper);
+        svg.appendChild(bg);
+        const rnd = seededRandom(seed);
+        const cols = 8, rows = 4, pad = 8;
+        const w = (320 - pad*2)/cols, h = (180 - pad*2)/rows;
+        for(let y=0;y<rows;y++){
+          for(let x=0;x<cols;x++){
+            const cx = pad + x*w + w/2;
+            const cy = pad + y*h + h/2;
+            const r = (Math.min(w,h)/2)*(.5 + rnd()*.35);
+            const g = document.createElementNS(svgNS,'g');
+            g.setAttribute('opacity', 0.6 + rnd()*0.35);
+            const sides = 4 + Math.floor(rnd()*3); // 4-6
+            let d = '';
+            for(let i=0;i<sides;i++){
+              const ang = (i/sides)*Math.PI*2 + (x+y)%2*0.2;
+              const rr = r * (i%2 ? 0.55 + rnd()*0.18 : 1);
+              const px = cx + Math.cos(ang)*rr;
+              const py = cy + Math.sin(ang)*rr;
+              d += (i===0?'M':'L')+px+','+py+' ';
+            }
+            d += 'Z';
+            const path = document.createElementNS(svgNS,'path');
+            path.setAttribute('d', d);
+            path.setAttribute('fill', rnd()>.5 ? a : b);
+            g.appendChild(path);
+            if(rnd()>.75){
+              const circ = document.createElementNS(svgNS,'circle');
+              circ.setAttribute('cx', cx);
+              circ.setAttribute('cy', cy);
+              circ.setAttribute('r', r*0.18);
+              circ.setAttribute('fill', rnd()>.5 ? b : a);
+              g.appendChild(circ);
+            }
+            svg.appendChild(g);
+          }
+        }
+        el.innerHTML = '';
+        el.appendChild(svg);
+      }
+      $$('.symbol-tiles').forEach(el=> drawMiniSymbols(el, el.dataset.seed || 'seed'));
+
+      // ARCHIVE FILTERS
+      const q = $('#q'), fS = $('#f-subject'), fY = $('#f-year'), fT = $('#f-type');
+      const cards = $$('#cards .card');
+      function applyFilters(){
+        const query = (q.value || '').trim().toLowerCase();
+        const s = fS.value; const y = fY.value; const t = fT.value;
+        cards.forEach(c=>{
+          const title = (c.dataset.title + ' ' + c.dataset.auth + ' ' + c.dataset.keywords).toLowerCase();
+          const okQ = !query || title.includes(query);
+          const okS = !s || c.dataset.subject===s;
+          const okY = !y || c.dataset.year===y;
+          const okT = !t || c.dataset.type===t;
+          c.style.display = (okQ && okS && okY && okT) ? '' : 'none';
+        });
+      }
+      ;[q, fS, fY, fT].forEach(el=>el.addEventListener('input', applyFilters));
+
+      // CITE POPOVER
+      const citeBtn = $('#citeBtn'), citePop = $('#citePop'), citeText = $('#citeText');
+      const cStyles = $$('.c-style');
+      const citeData = {
+        authors: ['Editorial Board'],
+        year: 2025,
+        title: '((Production Without Humans, Market Without Demand))',
+        journal: 'Humanities Journal',
+        volume: '12', issue: '1', pages: '1–12',
+        doi: '10.1234/hmj.2025.100'
+      };
+      function format(style){
+        const {authors, year, title, journal, volume, issue, pages, doi} = citeData;
+        if(style==='apa'){
+          return `${authors.join(', ')} (${year}). ${title}. ${journal}, ${volume}(${issue}), ${pages}. https://doi.org/${doi}`;
+        } else if(style==='chicago'){
+          return `${authors.join(', ')}. ${year}. “${title}.” ${journal} ${volume}, no. ${issue}: ${pages}. https://doi.org/${doi}`;
+        } else {
+          return `${authors.join(', ')}. “${title}.” ${journal} ${volume}.${issue} (${year}): ${pages}. https://doi.org/${doi}`;
+        }
+      }
+      function showCite(style='apa'){
+        citeText.textContent = format(style);
+        const r = citeBtn.getBoundingClientRect();
+        citePop.style.display = 'block';
+        const top = r.bottom + window.scrollY + 6;
+        const inlineStart = document.dir==='rtl' ? (window.innerWidth - r.right + window.scrollX) : (r.left + window.scrollX);
+        citePop.style.insetBlockStart = top + 'px';
+        citePop.style.insetInlineStart = inlineStart + 'px';
+        citeBtn.setAttribute('aria-expanded','true');
+      }
+      function hideCite(){
+        citePop.style.display = 'none';
+        citeBtn.setAttribute('aria-expanded','false');
+      }
+      citeBtn.addEventListener('click', ()=>{
+        if(citePop.style.display==='block'){ hideCite(); } else { showCite(); }
+      });
+      document.addEventListener('click', (e)=>{
+        if(!citePop.contains(e.target) && e.target!==citeBtn){ hideCite(); }
+      });
+      cStyles.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          cStyles.forEach(b=>b.setAttribute('aria-selected','false'));
+          btn.setAttribute('aria-selected','true');
+          citeText.textContent = format(btn.dataset.style);
+        });
+      });
+      $('#copyCite').addEventListener('click', async ()=>{
+        await navigator.clipboard.writeText(citeText.textContent);
+        toast('Cite copied ✓');
+      });
+      $('#dlBib').addEventListener('click', ()=>{
+        const d = citeData;
+        const bib = `@article{HMJ2025_100,
+  author={${d.authors.join(' and ')}},
+  title={${d.title}},
+  journal={${d.journal}},
+  year={${d.year}},
+  volume={${d.volume}},
+  number={${d.issue}},
+  pages={${d.pages}},
+  doi={${d.doi}}
+}`;
+        downloadText('citation.bib', bib);
+      });
+      $('#dlRIS').addEventListener('click', ()=>{
+        const d = citeData;
+        const ris = `TY  - JOUR
+TI  - ${d.title}
+AU  - ${d.authors.join('; ')}
+JO  - ${d.journal}
+VL  - ${d.volume}
+IS  - ${d.issue}
+SP  - 1
+EP  - 12
+PY  - ${d.year}
+DO  - ${d.doi}
+ER  - `;
+        downloadText('citation.ris', ris);
+      });
+      function downloadText(filename, text){
+        const blob = new Blob([text], {type:'text/plain'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+
+      // FOOTNOTES: popover (desktop) + bottom sheet (mobile)
+      const fnRefs = $$('.fn-ref');
+      const fnList = $('#footnotes');
+      let fnPopEl;
+      function ensureFnPop(){
+        if(!fnPopEl){
+          fnPopEl = document.createElement('div');
+          fnPopEl.className = 'fn-pop';
+          document.body.appendChild(fnPopEl);
+        }
+        return fnPopEl;
+      }
+      function isMobile(){ return window.matchMedia('(max-width: 1100px)').matches; }
+      const sheet = $('#fnSheet'), sheetContent = $('#fnContent'), closeSheet = $('#closeSheet');
+      closeSheet.addEventListener('click', ()=> sheet.classList.remove('active'));
+      fnRefs.forEach(ref=>{
+        ref.addEventListener('click', (e)=>{
+          e.preventDefault();
+          const id = ref.dataset.fn;
+          const el = $('#fn'+id);
+          if(!el) return;
+          const html = el.innerHTML.replace(/^<strong>.*?<\/strong>\s*/,'');
+          if(isMobile()){
+            sheetContent.innerHTML = html;
+            sheet.classList.add('active');
+          } else {
+            const pop = ensureFnPop();
+            pop.innerHTML = html;
+            const r = ref.getBoundingClientRect();
+            pop.style.display = 'block';
+            const top = r.bottom + window.scrollY + 6;
+            const inlineStart = (document.dir==='rtl') ? (window.innerWidth - r.right + window.scrollX) : (r.left + window.scrollX);
+            pop.style.insetBlockStart = top+'px';
+            pop.style.insetInlineStart = inlineStart+'px';
+            // dismiss on outside
+            setTimeout(()=>{
+              const onDoc = (evt)=>{
+                if(!pop.contains(evt.target) && evt.target!==ref){
+                  pop.style.display='none';
+                  document.removeEventListener('click', onDoc);
+                }
+              };
+              document.addEventListener('click', onDoc);
+            },0);
+          }
+        });
+      });
+
+      // READING PROGRESS
+      const progressEl = $('.progress');
+      function updateProgress(){
+        const art = $('article');
+        if(!art) return;
+        const rect = art.getBoundingClientRect();
+        const total = rect.height - window.innerHeight;
+        const seen = Math.min(Math.max(-rect.top, 0), total);
+        const p = total > 0 ? seen/total : 0;
+        progressEl.style.blockSize = Math.round(p * window.innerHeight) + 'px';
+      }
+      document.addEventListener('scroll', ()=>requestAnimationFrame(updateProgress), {passive:true});
+      window.addEventListener('resize', updateProgress);
+      updateProgress();
+
+      // Simple toast
+      let toastEl;
+      function toast(msg){
+        if(!toastEl){
+          toastEl = document.createElement('div');
+          toastEl.style.position='fixed';
+          toastEl.style.insetBlockEnd='20px';
+          toastEl.style.insetInlineStart='50%';
+          toastEl.style.transform='translateX(-50%)';
+          toastEl.style.background='var(--surface)';
+          toastEl.style.border='1px solid var(--grid)';
+          toastEl.style.borderRadius='12px';
+          toastEl.style.padding='10px 14px';
+          toastEl.style.boxShadow='var(--shadow)';
+          toastEl.style.zIndex='999';
+          toastEl.style.transition='opacity 220ms ease';
+          document.body.appendChild(toastEl);
+        }
+        toastEl.textContent = msg;
+        toastEl.style.opacity='1';
+        setTimeout(()=> toastEl.style.opacity='0', 1600);
+      }
+
+      // Keyboard: ESC closes sheet/popovers
+      document.addEventListener('keydown', (e)=>{
+        if(e.key==='Escape'){
+          if(sheet.classList.contains('active')) sheet.classList.remove('active');
+          if($('#citePop').style.display==='block') hideCite();
+        }
+      });
+
+      // Responsive tweaks: collapse notes on small screens
+      const mq = window.matchMedia('(max-width: 1100px)');
+      function toggleNotes(){
+        const notes = document.querySelector('aside.notes');
+        if(!notes) return;
+        notes.style.display = mq.matches ? 'none' : '';
+      }
+      mq.addEventListener('change', toggleNotes);
+      toggleNotes();
+
+    })();
+  </script>
+</body>
+</html>
