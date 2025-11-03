@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>مجله علوم انسانی — نسخه ادیتوریال خلاق (سپیا)</title>
+  <meta name="description" content="تحلیل مفهوم راست و چپ سیاسی: از ریشه‌های تاریخی در انقلاب فرانسه تا کاربرد امروزی در نگرش‌های سیاسی." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Fonts: Vazirmatn (body & headings), Lateef (ornamental dropcap) -->
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..900&family=Lateef&display=swap" rel="stylesheet">
+  <style>
+    /* ============ Design Tokens ============ */
+    :root {
+      --ink: #20201F;
+      --paper: #F5EFE3;      /* sepia paper */
+      --surface: #FFFCF7;
+      --accent: #1E3A8A;     /* deep blue */
+      --accent-2: #C09A3D;   /* gold */
+      --muted: #6B7280;
+      --grid: rgba(0,0,0,.06);
+      --shadow: 0 10px 26px rgba(0,0,0,.08);
+      --radius: 14px;
+
+      --font-body: "Vazirmatn", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Naskh Arabic", sans-serif;
+      --font-heading: "Vazirmatn", var(--font-body);
+      --font-ornament: "Lateef", var(--font-body);
+
+      --size-body: 18px;
+      --line-body: 1.9;
+
+      --speed-fast: 120ms;
+      --speed-base: 220ms; /* Adjusted for sheet animation */
+      --easing: cubic-bezier(.2,.8,.2,1);
+
+      --container: min(94vw, 1080px);
+      --marginalia: 280px; /* sidebar width on desktop */
+    }
+
+    /* ============ Base/Reset ============ */
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:var(--font-body);
+      font-size:var(--size-body);
+      line-height:var(--line-body);
+      text-rendering:optimizeLegibility;
+    }
+
+    input, select, textarea, button { font-family: var(--font-body); font-size: 1rem; color: inherit; background: var(--surface); border: 1px solid var(--grid); border-radius: 12px; padding: 10px 12px; appearance: none; }
+    select { padding-inline-end: 28px; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 18px) 16px, calc(100% - 12px) 16px; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; }
+    textarea { resize: vertical; }
+    img,svg,video{max-width:100%;height:auto}
+    a{color:var(--accent); text-decoration-thickness: from-font; text-underline-offset: 2px}
+    code,kbd,pre{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace}
+    :focus-visible{outline:2px solid var(--accent-2); outline-offset:2px}
+
+    /* Skip link */
+    .skip{position:absolute; inset-inline-start:0; inset-block-start:-40px; background:var(--accent); color:#fff; padding:.45rem .6rem; border-radius:10px; z-index:999}
+    .skip:focus{inset-block-start:8px}
+
+    /* Layout */
+    .container{inline-size:var(--container); margin-inline:auto; padding-inline:16px}
+    header.site{
+      position:sticky; inset-block-start:0; z-index:50;
+      background:color-mix(in oklab, var(--paper) 92%, var(--surface) 8%);
+      backdrop-filter:saturate(1.1) blur(6px);
+      border-block-end:1px solid var(--grid);
+    }
+    .topbar{display:flex; align-items:center; gap:10px; justify-content:space-between; padding:10px 0}
+    .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit}
+    .logo{ inline-size:36px; block-size:36px; border-radius:10px; display:grid; place-items:center; background: conic-gradient(from 120deg, var(--accent), var(--accent-2)); color:#fff; font-weight:800; font-family: var(--font-heading); box-shadow: var(--shadow); }
+    .brand-title{font-family:var(--font-heading); font-weight:800; letter-spacing:-.3px; font-size:1.1rem}
+    nav.primary{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+    nav.primary a{color:inherit; text-decoration:none; padding:8px 10px; border-radius:10px}
+    nav.primary a:hover{background:var(--grid)}
+    
+    /* Hero is now part of the article section for this specific layout */
+    .hero{display:none} /* Hide old hero */
+    .dossiers{margin-block:22px 8px; border-block-start:1px solid var(--grid); padding-block-start:22px;}
+    .dossiers h2{font-family:var(--font-heading); letter-spacing:-.2px; font-size: clamp(18px, 2.8vw, 26px)}
+    .hstack{display:flex; gap:14px; overflow:auto; padding:6px; scroll-snap-type:x mandatory}
+    .card-tall{ scroll-snap-align:start; min-inline-size:220px; inline-size:220px; block-size:320px; border-radius:16px; overflow:hidden; background:var(--surface); border:1px solid var(--grid); box-shadow: var(--shadow); display:flex; flex-direction:column; justify-content:space-between; }
+    .symbol-tiles{inline-size:100%; block-size:58%; background:var(--surface)}
+    .card-tall .body{padding:12px 14px}
+    .card-tall h3{font-family:var(--font-heading); margin:0 0 6px 0; font-size:1.04rem}
+    .card-tall small{color:var(--muted)}
+    .card-tall a{align-self:flex-start; margin:0 0 12px 12px}
+
+    /* Archive */
+    .archive{padding-block:22px; border-block:1px solid var(--grid)}
+    .archive h2{font-family:var(--font-heading); font-size: clamp(18px, 2.8vw, 26px)}
+    .filters{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-block-end:14px}
+    .filters .field{display:flex; gap:8px; align-items:center; background:var(--surface); border:1px solid var(--grid); border-radius:12px; padding:6px 10px}
+    .filters input[type="search"]{border:none; padding:6px; outline:none; background:transparent}
+    .grid{display:grid; grid-template-columns: repeat(3, 1fr); gap:14px}
+    @media (max-width: 1024px){ .grid{grid-template-columns: repeat(2, 1fr)} }
+    @media (max-width: 640px){ .grid{grid-template-columns: 1fr} }
+    .card{ border:1px solid var(--grid); background:var(--surface); border-radius:16px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; box-shadow:var(--shadow) }
+    .meta-row{display:flex; gap:10px; align-items:center; justify-content:space-between}
+    .tag{font-size:.9rem; padding:4px 10px; border-radius:999px; background:color-mix(in oklab, var(--accent) 8%, var(--surface))}
+    .kicker{color:var(--muted); font-size:.92rem}
+    .id-pill{font-family: ui-monospace, "Roboto Mono", monospace; background:color-mix(in oklab, var(--accent-2) 15%, var(--surface)); border-radius:999px; padding:2px 8px}
+    .card h4{margin:.2rem 0; font-family:var(--font-heading); letter-spacing:-.2px}
+    .card .actions{display:flex; gap:10px; flex-wrap:wrap}
+
+    /* Article layout with marginalia */
+    .article-wrap{position:relative; display:grid; grid-template-columns: 1fr minmax(0, var(--marginalia)); gap:18px; align-items:start}
+    @media (max-width: 1100px){ .article-wrap{grid-template-columns: 1fr} }
+    article{ background:var(--surface); border:1px solid var(--grid); border-radius:16px; padding:24px; box-shadow:var(--shadow) }
+    article h1{font-family:var(--font-heading); font-weight:800; font-size: clamp(26px, 4vw, 42px); margin:0 0 8px 0; letter-spacing:-.2px; line-height: 1.3;}
+    .byline{color:var(--muted); display:flex; flex-wrap:wrap; gap:10px; align-items:center; font-size:.98rem}
+    .doi{font-family: ui-monospace, "Roboto Mono", monospace; background:color-mix(in oklab, var(--accent) 8%, var(--surface)); padding:2px 8px; border-radius:999px}
+    .tools-row{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-block:12px 16px}
+    .dropcap p:first-of-type::first-letter{
+      font-family: var(--font-ornament);
+      float:inline-start; font-size:3.5em; line-height:.9; padding-inline:8px 4px; margin-inline-end:6px; color:var(--accent-2)
+    }
+    blockquote{ margin: 1.5rem 0; padding: .5rem 1.2rem; border-inline-start: 4px solid var(--accent); background: color-mix(in oklab, var(--accent) 6%, var(--surface)); border-radius: 0 8px 8px 0; }
+    article ol, article ul { padding-inline-start: 24px; }
+    article li { margin-block-end: 8px; }
+
+    /* Marginalia / Side-notes & footnotes */
+    aside.notes{ position:sticky; top:84px; max-block-size: calc(100dvh - 100px); overflow:auto; background:var(--surface); border:1px solid var(--grid); border-radius:16px; padding:12px; box-shadow:var(--shadow) }
+    .notes h3{margin:4px 0 10px 0; font-size:1rem; font-weight:700;}
+    .fn-item{font-size:.92rem; border-block-end:1px dashed var(--grid); padding-block:10px; line-height: 1.7;}
+    .fn-item:last-child{border:none}
+    .fn-ref{ color:var(--accent); text-decoration:none; border-bottom:1.5px dotted color-mix(in oklab, var(--accent) 60%, transparent); padding-inline:2px; cursor:pointer; font-weight: 600; }
+    
+    /* Bottom Sheet for footnotes (mobile) */
+    .sheet{
+      position:fixed; inset: auto 0 0 0; background:var(--surface); border-radius:16px 16px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,.15);
+      transform: translateY(100%); transition: transform var(--speed-base) var(--easing); z-index:100;
+    }
+    .sheet.active{transform: translateY(0)}
+    .sheet .handle{inline-size:56px; block-size:5px; background:var(--grid); border-radius:99px; margin:8px auto; cursor:pointer;}
+    .sheet header{display:flex; justify-content:space-between; align-items: center; padding:6px 16px 0 16px}
+    .sheet header strong { font-size: 1.1rem; }
+    .sheet .content{padding:12px 16px 16px 16px; max-block-size:60dvh; overflow:auto; line-height: 1.8; font-size: 0.95rem; }
+    
+    .btn{ border:1px solid var(--grid); background:var(--surface); color:inherit; border-radius:12px; padding:8px 12px; cursor:pointer; transition: transform var(--speed-fast) var(--easing), background var(--speed-base); }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:color-mix(in oklab, var(--accent) 12%, var(--surface)); border-color:color-mix(in oklab, var(--accent) 35%, var(--surface))}
+
+    /* Footer */
+    footer{margin-block:22px; color:var(--muted); font-size:.95rem}
+
+    /* Motion preferences */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important; transition:none!important; scroll-behavior:auto!important}
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">پرش به محتوا</a>
+
+  <header class="site">
+    <div class="container topbar">
+      <a class="brand" href="#" aria-label="صفحه نخست">
+        <div class="logo" aria-hidden="true">ع‌ا</div>
+        <div class="brand-title">مجله علوم انسانی</div>
+      </a>
+      <nav class="primary" aria-label="ناوبری اصلی">
+        <a href="#article">مقاله</a>
+        <a href="#archive">آرشیو</a>
+        <a href="#submit">ارسال</a>
+        <a href="#policies">سیاست‌ها</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    
+    <!-- Article -->
+    <section id="article" aria-labelledby="article-title" style="margin-block:22px">
+      <div class="article-wrap">
+        <article class="dropcap" itemscope itemtype="https://schema.org/ScholarlyArticle">
+          <header>
+            <h1 id="article-title" itemprop="headline">راست و چپ سیاسی؛ دو واژه ساده با معنایی پیچیده</h1>
+            <div class="byline">
+              <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+                <span itemprop="name">تحریریه علوم انسانی</span>
+              </span>
+              <span>•</span>
+              <span itemprop="datePublished" content="2025-04-10">۲۱ فروردین ۱۴۰۴</span>
+              <span class="doi" itemprop="identifier">DOI: 10.1234/hmj.2025.101</span>
+            </div>
+            <div class="tools-row">
+              <a class="btn" href="#" role="button">دانلود PDF</a>
+              <span class="kicker">کلیدواژه‌ها: راست و چپ سیاسی • ایدئولوژی • نگرش سیاسی • محافظه‌کاری • رادیکالیسم</span>
+            </div>
+          </header>
+
+          <p itemprop="abstract">
+            حتماً بارها در اخبار یا گفت‌وگوهای سیاسی اصطلاح‌های «راست» و «چپ» را شنیده‌اید. این دو واژه در ظاهر ساده‌اند، اما در بسیاری از موارد نادرست یا با بی‌دقتی به کار می‌روند. بنابراین یکی از نخستین گام‌ها برای درک سیاست، شناخت معنای دقیق «راست» و «چپ» و کاربرد صحیح آن‌ها در گفتار<a href="#fn1" class="fn-ref" data-fn="1" role="doc-noteref" aria-label="پاورقی ۱">[۱]</a> سیاسی است. تعریف این دو اصطلاح، مانند بسیاری از مفاهیم سیاسی، با دشواری همراه است؛ زیرا در علم سیاست به‌ندرت اجماعی بر سر تعاریف وجود دارد. اختلاف‌نظر، در واقع، بخشی از ذات علوم سیاسی است. با این حال، می‌توان بر پایه‌ی تعریفی عرفی و پذیرفته‌شده در فضای علمی، این دو مفهوم را بررسی کرد. در گام نخست، باید به ریشه‌ی تاریخی آن‌ها بازگردیم.
+          </p>
+
+          <h3>همه چیز از پارلمان فرانسه آغاز شد!</h3>
+          <p>
+            در جریان انقلاب کبیر فرانسه (۱۷۸۹) و تشکیل مجلس ملی، نوعی تقسیم‌بندی میان نمایندگان شکل گرفت. در سمت راست مجلس، اشراف، روحانیان و بورژواهایی<a href="#fn2" class="fn-ref" data-fn="2" role="doc-noteref" aria-label="پاورقی ۲">[۲]</a> می‌نشستند که با تغییرات رادیکال<a href="#fn3" class="fn-ref" data-fn="3" role="doc-noteref" aria-label="پاورقی ۳">[۳]</a> مخالف بودند؛ از جمله اعدام لویی شانزدهم، ایجاد جمهوری یا تقسیم زمین‌ها. آنان اساساً خواهان حفظ نظم موجود بودند یا در بهترین حالت، تنها تغییرات جزئی را می‌پذیرفتند. در سوی مقابل، ژاکوبن‌ها قرار داشتند که در سمت چپ پارلمان می‌نشستند. آن‌ها انقلابیونی بودند که می‌خواستند نظام فئودالی<a href="#fn4" class="fn-ref" data-fn="4" role="doc-noteref" aria-label="پاورقی ۴">[۴]</a> فرانسه را از بنیاد دگرگون کنند و جامعه‌ای نو بسازند. از همین‌جا واژه‌های «راست» و «چپ» متولد شدند: مدافعان وضع موجود در سمت راست، و حامیان تغییرات بنیادین در سمت چپ. در معنایی کلی‌تر، هر جا مدافعان نظم مستقر و مخالفان آن در برابر هم قرار گیرند، از «راست» و «چپ» سخن می‌گوییم.
+          </p>
+
+          <h3>راست و چپ؛ نگرش سیاسی‌اند، نه ایدئولوژی!</h3>
+          <p>
+            نکته‌ای که اغلب نادیده گرفته می‌شود این است که «راست» و «چپ» در اصل نگرش سیاسی‌اند، نه ایدئولوژی<a href="#fn5" class="fn-ref" data-fn="5" role="doc-noteref" aria-label="پاورقی ۵">[۵]</a>. بسیاری از سوء‌تفاهم‌ها از همین‌جا ناشی می‌شوند. ایدئولوژی را می‌توان مجموعه‌ای منسجم از باورها، ارزش‌ها و اصول دانست که درباره‌ی انسان، جامعه و سیاست دیدگاهی کلی ارائه می‌دهد. ایدئولوژی‌ها به ما می‌گویند «جهان چگونه است و چگونه باید باشد» و معمولاً دارای بنیان‌های فلسفی و اخلاقی‌اند. برای نمونه، لیبرالیسم، سوسیالیسم، کمونیسم، فاشیسم و ناسیونالیسم، هرکدام ایدئولوژی‌اند؛ زیرا درباره‌ی عدالت، آزادی، قدرت، مالکیت و نقش دولت نظریه‌ای جامع دارند.
+          </p>
+          <p>
+            اما نگرش سیاسی (Political Attitude)، صرفاً موضع ما در برابر وضعیت موجود است: آیا می‌خواهیم آن را حفظ کنیم؟ به‌آرامی اصلاح کنیم؟ یا کاملاً دگرگون سازیم؟ به بیان ساده، ایدئولوژی می‌گوید «به چه باور داری»، و نگرش سیاسی می‌پرسد «در برابر آنچه هست، چه واکنشی داری؟» ایدئولوژی‌ها در اغلب جوامع معنایی نسبتاً ثابت دارند. مثلاً لیبرالیسم در هر کشوری به آزادی فردی، دولت محدود و بازار آزاد اشاره دارد. اما نگرش‌های سیاسی کاملاً وابسته به زمینه‌اند و از جامعه‌ای به جامعه‌ی دیگر تغییر می‌کنند. در تاریخ معاصر، از آن‌جا که نظم موجود معمولاً بر پایه‌ی ایدئولوژی‌های لیبرالی و محافظه‌کارانه است و جریان‌های مخالف عمدتاً مارکسیستی یا سوسیالیستی بوده‌اند، واژه‌های «راست» و «چپ» اغلب به‌اشتباه مترادف این ایدئولوژی‌ها در نظر گرفته می‌شوند. در حالی که در اصل، «راست» و «چپ» توصیف‌کننده‌ی نگرش سیاسی‌اند، نه نام دیگر ایدئولوژی‌ها.
+          </p>
+
+          <h3>طیف نگرش‌های سیاسی</h3>
+          <p>
+            در یک نگاه کلی، نگرش‌های سیاسی را می‌توان روی طیفی از راست تا چپ چنین مرتب کرد:
+          </p>
+          <ol>
+            <li><strong>بنیادگرایی یا ارتجاع (انتهای راست):</strong> بنیادگرایان خواهان بازگشت به «گذشته‌ای آرمانی» هستند و تغییرات مدرن را تهدیدی می‌دانند<a href="#fn6" class="fn-ref" data-fn="6" role="doc-noteref" aria-label="پاورقی ۶">[۶]</a>. در جهان اسلام، گروه‌هایی چون طالبان یا داعش نمونه‌هایی از بنیادگرایی مذهبی‌اند. در آمریکا نیز جنبش «راست مسیحی» تا حدی چنین گرایشی دارد.</li>
+            <li><strong>محافظه‌کاری:</strong> محافظه‌کاران نظم موجود را ارزشمند می‌دانند و نگران پیامدهای تغییرات بزرگ هستند. آن‌ها به تغییر تدریجی و سنجیده باور دارند. حزب محافظه‌کار بریتانیا و جناح جمهوری‌خواه سنتی در آمریکا (مانند دوره‌ی ریگان) نمونه‌هایی از این نگرش‌اند.</li>
+            <li><strong>اصلاح‌طلبی یا لیبرالیسم:</strong> اصلاح‌طلبان خواهان تغییر تدریجی، قانونی و مسالمت‌آمیزند. آن‌ها نه مدافع وضع موجودند و نه به دگرگونی ریشه‌ای باور دارند. در این معنا، لیبرالیسم نوعی نگرش اصلاح‌طلبانه است.</li>
+            <li><strong>رادیکالیسم (انتهای چپ):</strong> رادیکال‌ها خواهان دگرگونی بنیادین و سریع‌اند، حتی اگر این تغییر از مسیر انقلاب و خشونت بگذرد. بلشویک‌های روسیه در انقلاب ۱۹۱۷ یا انقلاب کوبا به رهبری فیدل کاسترو نمونه‌های بارز این نگرش‌اند.</li>
+          </ol>
+
+          <h3>لیبرالیسم را با لیبرالیسم یکی نگیرید!</h3>
+          <p>
+            در اینجا باید میان لیبرالیسم به‌عنوان نگرش سیاسی و لیبرالیسم به‌عنوان ایدئولوژی تفاوت گذاشت. به‌عنوان نگرش، لیبرالیسم به اصلاح‌طلبی و تغییر تدریجی اشاره دارد؛ اما به‌عنوان ایدئولوژی، بر آزادی فردی، حاکمیت قانون<a href="#fn7" class="fn-ref" data-fn="7" role="doc-noteref" aria-label="پاورقی ۷">[۷]</a> و محدودیت قدرت دولت تأکید می‌کند. در این ایدئولوژی، فرد بنیادی‌ترین واحد جامعه است و هدف سیاست حفظ آزادی‌های او در برابر دولت و سنت است. در نتیجه، هرچند این دو معنا به هم نزدیک‌اند، اما یکی نگرشی درباره‌ی تغییر است و دیگری نظامی فکری درباره‌ی انسان و قدرت.
+          </p>
+          
+          <h3>نگرش مفهومی نسبی، زمان‌مند و مکان‌مند</h3>
+          <p>
+            یکی از خطاهای رایج، تصور ثبات معنایی «راست» و «چپ» است. این دو مفهوم نسبی‌اند و بسته به ساختار قدرت، تاریخ و فرهنگ هر جامعه معنای متفاوتی پیدا می‌کنند. برای مثال، در آمریکا امروز، دفاع از بازار آزاد و دولت کوچک نوعی نگرش راست‌گرایانه است؛ اما اگر همین ایده‌ها در چین یا روسیه مطرح شود، چون در تضاد با نظم موجود است، چپ‌گرایانه (یا رادیکال) تلقی می‌شود. بنابراین، جایگاه راست و چپ مطلق نیست، بلکه تابعی از شرایط تاریخی و سیاسی هر جامعه است<a href="#fn8" class="fn-ref" data-fn="8" role="doc-noteref" aria-label="پاورقی ۸">[۸]</a>.
+          </p>
+
+          <h3>جمع‌بندی</h3>
+          <p>
+            در دنیای امروز که سیاست روزبه‌روز پیچیده‌تر می‌شود، فهم دقیق مفاهیم پایه اهمیت فراوانی دارد. یکی از این مفاهیم، دوگانه‌ی «راست» و «چپ» است که اغلب به‌اشتباه با ایدئولوژی‌ها خلط می‌شود. در حالی که این دو، بیش از آن‌که دو اردوگاه فکری باشند، دو نگرش نسبت به تغییر و نظم اجتماعی‌اند. راست تمایل به حفظ یا اصلاح تدریجی وضع موجود دارد، در حالی که چپ خواهان دگرگونی‌های بنیادین است. اما معنای دقیق این دو، همواره به زمان، مکان و زمینه‌ی تاریخی بستگی دارد. ممکن است شما با خط‌کش نگرش‌های سیاسی در ایران دهه‌ی ۱۳۴۰ چپ‌گرای رادیکال محسوب شوید، اما در ایران امروز، یک راست محافظه‌کار!
+          </p>
+        </article>
+
+        <!-- Marginalia -->
+        <aside class="notes" aria-label="حاشیه‌نویسی و پاورقی">
+          <h3>پاورقی‌ها</h3>
+          <ol id="footnotes">
+            <li id="fn1" class="fn-item" role="doc-footnote"><strong>۱. گفتار (Discourse):</strong> در علوم اجتماعی، گفتار فراتر از صحبت کردن است و به نظامی از اندیشه‌ها، متون و اعمال اجتماعی اطلاق می‌شود که واقعیت را برای یک جامعه خاص تعریف و تولید می‌کند.</li>
+            <li id="fn2" class="fn-item" role="doc-footnote"><strong>۲. بورژوازی (Bourgeoisie):</strong> در ترمینولوژی مارکسیستی، به طبقه‌ای اطلاق می‌شود که در نظام سرمایه‌داری، ابزارهای تولید (کارخانه‌ها، زمین و سرمایه) را در اختیار دارد و نیروی کار دیگران را به کار می‌گیرد. در معنای عام‌تر، به طبقه متوسط و مرفه شهری گفته می‌شود.</li>
+            <li id="fn3" class="fn-item" role="doc-footnote"><strong>۳. رادیکال (Radical):</strong> این واژه از ریشه لاتین "radix" به معنای «ریشه» می‌آید. در سیاست، به معنای طرفداری از تغییرات بنیادین و ریشه‌ای در ساختارهای اجتماعی یا سیاسی است، در مقابل تغییرات سطحی یا تدریجی.</li>
+            <li id="fn4" class="fn-item" role="doc-footnote"><strong>۴. نظام فئودالی (Feudalism):</strong> یک نظام اجتماعی-اقتصادی که در اروپای قرون وسطی رایج بود. مشخصه اصلی آن، مالکیت زمین توسط اربابان (لردها) و کار کردن رعیت‌ها (سرف‌ها) روی آن در ازای دریافت حفاظت و حق حیات بود.</li>
+            <li id="fn5" class="fn-item" role="doc-footnote"><strong>۵. ایدئولوژی (Ideology):</strong> در معنای خنثی، به یک نظام فکری منسجم (مانند لیبرالیسم یا سوسیالیسم) گفته می‌شود. در معنای انتقادی (به‌ویژه در مارکسیسم)، به نظامی از باورها اطلاق می‌شود که طبقه حاکم برای توجیه سلطه خود به کار می‌برد و آن را «طبیعی» جلوه می‌دهد.</li>
+            <li id="fn6" class="fn-item" role="doc-footnote"><strong>۶. ارتجاع (Reaction):</strong> به معنای واکنش منفی به تغییرات مدرن و تلاش برای بازگرداندن جامعه به یک نظم اجتماعی، سیاسی یا مذهبی پیشین است که «آرمانی» پنداشته می‌شود. این نگرش با محافظه‌کاری که خواهان حفظ وضع موجود است، تفاوت دارد.</li>
+            <li id="fn7" class="fn-item" role="doc-footnote"><strong>۷. حاکمیت قانون (Rule of Law):</strong> اصلی حقوقی-سیاسی که بر اساس آن، هیچ‌کس (حتی حکومت) فراتر از قانون نیست. همه افراد و نهادها در برابر قوانینی که به صورت عمومی تصویب شده، به طور یکسان پاسخگو هستند.</li>
+            <li id="fn8" class="fn-item" role="doc-footnote"><strong>۸. نسبیت‌گرایی (Relativism):</strong> این مفهوم بیان می‌کند که قضاوت‌ها، ارزش‌ها و معناها مطلق نیستند، بلکه به یک چارچوب خاص (فرهنگی، تاریخی یا فردی) وابسته‌اند. در این متن، نسبی بودن «راست» و «چپ» به معنای وابستگی آن‌ها به زمینه سیاسی هر کشور است.</li>
+          </ol>
+        </aside>
+      </div>
+
+      <!-- Mobile Bottom Sheet for footnotes -->
+      <div class="sheet" id="fnSheet" role="dialog" aria-modal="true" aria-labelledby="fnTitle">
+        <div class="handle" aria-hidden="true"></div>
+        <header>
+          <strong id="fnTitle">پاورقی</strong>
+          <button class="btn" id="closeSheet" aria-label="بستن">بستن</button>
+        </header>
+        <div class="content" id="fnContent"></div>
+      </div>
+    </section>
+
+    <!-- Other sections like Archive, Submit, etc. -->
+    <!-- These can be filled or kept as is -->
+    
+  </main>
+
+  <footer>
+    <p class="container">© ۲۰۲۵ مجله علوم انسانی — محتوا تحت مجوز CC BY 4.0</p>
+  </footer>
+
+  <!-- JSON-LD (Schema.org) for new article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "راست و چپ سیاسی؛ دو واژه ساده با معنایی پیچیده",
+    "author": { "@type": "Organization", "name": "تحریریه علوم انسانی" },
+    "datePublished": "2025-04-10",
+    "identifier": "https://doi.org/10.1234/hmj.2025.101",
+    "isPartOf": { "@type": "Periodical", "name": "مجله علوم انسانی" },
+    "inLanguage": "fa",
+    "keywords": ["راست و چپ سیاسی", "ایدئولوژی", "نگرش سیاسی", "محافظه‌کاری", "رادیکالیسم", "لیبرالیسم"]
+  }
+  </script>
+
+  <script>
+    ;(function(){
+      // Helpers
+      const $ = (s, r=document)=>r.querySelector(s);
+      const $$ = (s, r=document)=>Array.from(r.querySelectorAll(s));
+
+      // ===== FOOTNOTES LOGIC (Desktop & Mobile) =====
+      const fnRefs = $$('.fn-ref');
+      const sheet = $('#fnSheet');
+      const fnContent = $('#fnContent');
+      const closeSheetBtn = $('#closeSheet');
+      const sheetHandle = $('.handle', sheet);
+      const isMobile = window.matchMedia('(max-width: 1100px)').matches;
+
+      fnRefs.forEach(ref => {
+        ref.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (isMobile) {
+            const fnId = ref.getAttribute('href').substring(1);
+            const fnItem = $(`#${fnId}`);
+            if (fnItem) {
+              fnContent.innerHTML = fnItem.innerHTML;
+              sheet.classList.add('active');
+            }
+          } else {
+            // On desktop, scroll to the footnote in the sidebar
+            const fnId = ref.getAttribute('href').substring(1);
+            const fnItem = $(`#${fnId}`);
+            if (fnItem) {
+              fnItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              // Optional: highlight the footnote
+              fnItem.style.background = 'var(--grid)';
+              setTimeout(() => { fnItem.style.background = ''; }, 1500);
+            }
+          }
+        });
+      });
+
+      function closeSheet() {
+        sheet.classList.remove('active');
+      }
+
+      closeSheetBtn.addEventListener('click', closeSheet);
+      sheetHandle.addEventListener('click', closeSheet);
+
+      // Keyboard: ESC closes sheet
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sheet.classList.contains('active')) {
+          closeSheet();
+        }
+      });
+      
+      // ===== Responsive tweaks: hide sidebar on mobile =====
+      const mq = window.matchMedia('(max-width: 1100px)');
+      function toggleNotesVisibility(){
+        const notes = $('aside.notes');
+        if(!notes) return;
+        notes.style.display = mq.matches ? 'none' : '';
+      }
+      mq.addEventListener('change', toggleNotesVisibility);
+      toggleNotesVisibility(); // Initial check
+
+    })();
+  </script>
+</body>
+</html>
