@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
   <title>پارادوکس کنترل و اعتماد؛ ریشه‌های استبداد در مدیریت</title>
-  <meta name="description" content="تحلیل عمیق تئوری‌های X و Y، مدیریت الگوریتمی، اقتصاد گیگ و روان‌شناسی کنترل در سازمان‌ها به همراه پرسش و پاسخ." />
   <meta name="theme-color" content="#F4ECD8">
 
   <!-- Fonts -->
@@ -13,28 +12,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..900&family=Lateef&display=swap" rel="stylesheet">
 
   <style>
-    /* ============ MANAGEMENT SEPIA THEME ============ */
+    /* ============ THEME VARIABLES ============ */
     :root {
-      --paper: #F4ECD8;         /* کرم گرم (سپیا) */
-      --paper-dark: #E8DEC6;    
-      --surface: #FDFAF4;       /* سطح روشن کارت‌ها */
-      
-      --ink: #1F2937;           /* سرمه‌ای خیلی تیره (بجای مشکی مطلق) */
-      --ink-light: #4B5563;     
-      
-      --accent: #0F4C81;        /* آبی کلاسیک (رنگ مدیریت و اعتماد) */
-      --accent-light: #E0F2FE;  /* آبی خیلی روشن */
-      --accent-gold: #D97706;   /* طلایی برای تاکیدات */
-      
+      --paper: #F4ECD8; --paper-dark: #E8DEC6; --surface: #FDFAF4;
+      --ink: #1F2937; --ink-light: #4B5563;
+      --accent: #0F4C81; --accent-light: #E0F2FE; --accent-gold: #D97706;
       --grid: rgba(15, 76, 129, 0.08);
       --shadow: 0 16px 40px -10px rgba(15, 76, 129, 0.1);
       
       --font-body: "Vazirmatn", sans-serif;
       --font-serif: "Lateef", serif;
-      
       --container: min(92vw, 1200px);
       --marginalia: 360px;
-      --radius: 16px;
     }
 
     *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -42,89 +31,43 @@
     body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); font-family: var(--font-body); line-height: 2.1; font-size: 18px; }
 
     /* ============ HEADER ============ */
-    header.site {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(244, 236, 216, 0.95); backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--grid);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-    }
-    .topbar {
-      width: var(--container); margin: 0 auto; padding: 16px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
+    header.site { position: sticky; top: 0; z-index: 50; background: rgba(244, 236, 216, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--grid); }
+    .topbar { width: var(--container); margin: 0 auto; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
     .brand { font-weight: 900; font-size: 1.2rem; color: var(--accent); display: flex; align-items: center; gap: 8px; }
     .brand span { background: var(--accent); color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 0.9rem; }
 
     /* ============ LAYOUT ============ */
-    .layout {
-      width: var(--container); margin: 40px auto; padding: 0 16px;
-      display: grid; grid-template-columns: 1fr minmax(0, var(--marginalia));
-      gap: 56px; align-items: start;
-    }
+    .layout { width: var(--container); margin: 40px auto; padding: 0 16px; display: grid; grid-template-columns: 1fr minmax(0, var(--marginalia)); gap: 56px; align-items: start; }
     @media (max-width: 1150px) { .layout { grid-template-columns: 1fr; gap: 0; } }
 
-    /* ============ ARTICLE CARD ============ */
-    article {
-      background: var(--surface); border-radius: 24px; padding: 56px;
-      box-shadow: var(--shadow); position: relative; border: 1px solid rgba(255,255,255,0.6);
-    }
+    /* ============ ARTICLE ============ */
+    article { background: var(--surface); border-radius: 24px; padding: 56px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.6); }
     @media (max-width: 600px) { article { padding: 24px; border-radius: 16px; } }
 
     h1 { font-size: clamp(26px, 4.5vw, 46px); font-weight: 900; color: #111; line-height: 1.3; margin-bottom: 24px; letter-spacing: -0.5px; }
     h3 { font-size: 1.7rem; color: var(--accent); margin: 56px 0 24px 0; font-weight: 800; display: flex; align-items: center; gap: 12px; }
     h3::before { content: ''; display: block; width: 6px; height: 24px; background: var(--accent-gold); border-radius: 4px; }
-    
     p { margin-bottom: 28px; text-align: justify; }
     
-    .meta {
-      display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--grid);
-      font-size: 0.95rem; color: var(--ink-light); font-weight: 600;
-    }
+    .meta { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--grid); font-size: 0.95rem; color: var(--ink-light); font-weight: 600; }
     .meta i { color: var(--accent); margin-left: 6px; font-style: normal; }
 
-    /* Interactive Terms */
-    .term {
-      color: var(--ink); text-decoration: none; cursor: pointer; font-weight: 700;
-      border-bottom: 2px solid rgba(15, 76, 129, 0.3); padding: 0 2px;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
+    .term { color: var(--ink); text-decoration: none; cursor: pointer; font-weight: 700; border-bottom: 2px solid rgba(15, 76, 129, 0.3); padding: 0 2px; transition: all 0.3s; }
     .term:hover { background: var(--accent-light); border-bottom-color: var(--accent); color: var(--accent); border-radius: 4px; }
 
-    /* Blockquote */
-    blockquote {
-      position: relative; margin: 40px 0; padding: 32px 40px;
-      background: linear-gradient(135deg, var(--accent-light), var(--surface));
-      border-radius: 0 16px 16px 0; border-right: 5px solid var(--accent);
-      font-size: 1.15rem; line-height: 1.8; color: var(--ink); font-weight: 600;
-    }
+    blockquote { position: relative; margin: 40px 0; padding: 32px 40px; background: linear-gradient(135deg, var(--accent-light), var(--surface)); border-radius: 0 16px 16px 0; border-right: 5px solid var(--accent); font-size: 1.15rem; line-height: 1.8; color: var(--ink); font-weight: 600; }
 
-    /* ============ TABLE OF CONTENTS ============ */
-    .toc-card {
-      background: var(--surface); border: 1px solid var(--grid);
-      border-radius: 16px; padding: 32px; margin-bottom: 48px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    }
+    /* ============ TOC ============ */
+    .toc-card { background: var(--surface); border: 1px solid var(--grid); border-radius: 16px; padding: 32px; margin-bottom: 48px; }
     .toc-header { font-weight: 900; font-size: 1.1rem; margin-bottom: 20px; color: var(--accent); display: flex; align-items: center; gap: 10px; }
     .toc-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; list-style: none; padding: 0; margin: 0; }
-    .toc-item a {
-      display: flex; align-items: center; gap: 12px; text-decoration: none;
-      padding: 10px 16px; background: var(--paper); border-radius: 8px;
-      color: var(--ink); font-size: 0.9rem; font-weight: 600; transition: all 0.2s;
-    }
+    .toc-item a { display: flex; align-items: center; gap: 12px; text-decoration: none; padding: 10px 16px; background: var(--paper); border-radius: 8px; color: var(--ink); font-size: 0.9rem; font-weight: 600; transition: all 0.2s; }
     .toc-item a:hover { background: var(--accent); color: #fff; transform: translateY(-2px); }
     .toc-num { background: rgba(0,0,0,0.05); width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 0.75rem; font-weight: bold; }
-    .toc-item a:hover .toc-num { background: rgba(255,255,255,0.3); }
 
     /* ============ SIDEBAR ============ */
-    aside.sidebar {
-      position: sticky; top: 100px; max-height: calc(100vh - 120px); overflow-y: auto;
-      padding-right: 16px; margin-right: -16px; scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
-    }
-    .note-card {
-      background: var(--surface); padding: 20px; border-radius: 12px;
-      margin-bottom: 24px; border-left: 4px solid var(--paper-dark);
-      transition: all 0.4s ease; opacity: 0.85; transform: scale(0.98);
-    }
+    aside.sidebar { position: sticky; top: 100px; max-height: calc(100vh - 120px); overflow-y: auto; padding-right: 16px; margin-right: -16px; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+    .note-card { background: var(--surface); padding: 20px; border-radius: 12px; margin-bottom: 24px; border-left: 4px solid var(--paper-dark); transition: all 0.4s ease; opacity: 0.85; transform: scale(0.98); }
     .note-card strong { display: block; color: var(--accent); font-size: 1.05rem; margin-bottom: 8px; border-bottom: 1px dashed var(--grid); padding-bottom: 8px; }
     .note-card p { font-size: 0.92rem; color: var(--ink-light); margin: 0; line-height: 1.8; text-align: right; }
     .note-card.active { opacity: 1; transform: scale(1); border-left-color: var(--accent-gold); background: #FFF; box-shadow: 0 10px 30px rgba(15, 76, 129, 0.15); }
@@ -133,37 +76,39 @@
     .faq-section { margin-top: 80px; padding-top: 40px; border-top: 2px solid var(--grid); }
     .faq-intro { text-align: center; margin-bottom: 40px; }
     .faq-intro h2 { font-size: 2rem; font-weight: 900; color: var(--accent); margin: 0; }
-    
-    .faq-item { background: var(--surface); border: 1px solid var(--grid); border-radius: 12px; margin-bottom: 16px; overflow: hidden; transition: all 0.3s; }
+    .faq-item { background: var(--surface); border: 1px solid var(--grid); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
     .faq-item[open] { border-color: var(--accent); box-shadow: 0 4px 12px rgba(15, 76, 129, 0.08); }
     .faq-q { padding: 20px 24px; cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; font-size: 1.05rem; }
     .faq-q::after { content: '+'; font-size: 1.5rem; color: var(--accent-gold); transition: transform 0.3s; }
     details[open] .faq-q::after { transform: rotate(45deg); color: var(--accent); }
     .faq-a { padding: 0 24px 24px 24px; color: var(--ink-light); font-size: 0.95rem; border-top: 1px solid rgba(0,0,0,0.03); animation: fadeIn 0.4s ease; }
 
-    /* ============ DID YOU KNOW BOX ============ */
-    .did-you-know {
-      background: var(--accent); color: #fff; padding: 32px; border-radius: 16px;
-      margin: 40px 0; position: relative; overflow: hidden;
-    }
+    /* ============ EXTRAS ============ */
+    .did-you-know { background: var(--accent); color: #fff; padding: 32px; border-radius: 16px; margin: 40px 0; position: relative; overflow: hidden; }
     .dyk-icon { position: absolute; top: 20px; left: 20px; font-size: 4rem; opacity: 0.1; font-family: serif; font-weight: bold; }
     .dyk-title { color: var(--accent-gold); font-weight: 900; font-size: 1.1rem; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
     
-    /* ============ CONCLUSION BOX ============ */
-    .conclusion {
-      background: linear-gradient(to bottom, var(--surface), var(--paper));
-      border: 2px solid var(--accent-gold); border-radius: 16px; padding: 40px;
-      text-align: center; margin-top: 60px;
-    }
+    .conclusion { background: linear-gradient(to bottom, var(--surface), var(--paper)); border: 2px solid var(--accent-gold); border-radius: 16px; padding: 40px; text-align: center; margin-top: 60px; }
 
-    /* ============ MOBILE SHEET ============ */
+    /* ============ IMPROVED MOBILE SHEET ============ */
     .sheet-backdrop { position: fixed; inset: 0; background: rgba(31, 41, 55, 0.4); z-index: 90; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(4px); }
     .sheet-backdrop.active { opacity: 1; pointer-events: auto; }
-    .sheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--surface); border-radius: 24px 24px 0 0; box-shadow: 0 -10px 50px rgba(0,0,0,0.3); transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.15, 0.85, 0.3, 1); max-height: 85vh; display: flex; flex-direction: column; }
+    
+    .sheet { 
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; 
+      background: var(--surface); border-radius: 24px 24px 0 0; 
+      box-shadow: 0 -10px 50px rgba(0,0,0,0.3); 
+      transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1); 
+      max-height: 85vh; display: flex; flex-direction: column; 
+    }
     .sheet.active { transform: translateY(0); }
-    .sheet-handle { width: 60px; height: 6px; background: #D1D5DB; border-radius: 10px; margin: 16px auto; }
-    .sheet-content { padding: 0 24px 32px 24px; overflow-y: auto; }
-    .sheet-title { font-weight: 900; font-size: 1.2rem; color: var(--accent); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--grid); }
+    
+    /* Draggable Area is now larger and clearer */
+    .sheet-header-area { padding: 10px 0 0 0; cursor: grab; flex-shrink: 0; background: var(--surface); border-radius: 24px 24px 0 0; }
+    .sheet-handle { width: 50px; height: 6px; background: #D1D5DB; border-radius: 10px; margin: 0 auto 16px auto; }
+    .sheet-title { font-weight: 900; font-size: 1.2rem; color: var(--accent); margin: 0 24px 12px 24px; padding-bottom: 12px; border-bottom: 1px solid var(--grid); }
+    
+    .sheet-content { padding: 0 24px 40px 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -377,14 +322,14 @@
 
   </div>
 
-  <!-- Mobile Sheet -->
+  <!-- Mobile Sheet (Synced with iOS Physics) -->
   <div class="sheet-backdrop" id="sheetBackdrop"></div>
   <div class="sheet" id="sheetPanel">
-    <div class="sheet-handle" id="sheetHandle"></div>
-    <div class="sheet-content">
-      <div class="sheet-title" id="sheetTitle"></div>
-      <div id="sheetBody"></div>
+    <div class="sheet-header-area" id="sheetHandleArea">
+      <div class="sheet-handle"></div>
     </div>
+    <div class="sheet-title" id="sheetTitle"></div>
+    <div class="sheet-content" id="sheetBody"></div>
   </div>
 
   <!-- LOGIC -->
@@ -395,7 +340,7 @@
     const backdrop = document.getElementById('sheetBackdrop');
     const sheetTitle = document.getElementById('sheetTitle');
     const sheetBody = document.getElementById('sheetBody');
-    const sheetHandle = document.getElementById('sheetHandle');
+    const sheetHandleArea = document.getElementById('sheetHandleArea');
 
     // --- Interaction Logic ---
     terms.forEach(term => {
@@ -436,11 +381,46 @@
     }
     backdrop.addEventListener('click', closeSheet);
 
-    // --- Swipe Down Logic ---
+    // --- Enhanced Swipe Down Logic (iOS Feel) ---
     let startY = 0, currentY = 0, isDragging = false;
-    sheetHandle.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; }, {passive: true});
-    sheetHandle.addEventListener('touchmove', (e) => { if (!isDragging) return; currentY = e.touches[0].clientY; const delta = currentY - startY; if (delta > 0) { e.preventDefault(); sheet.style.transform = `translateY(${delta}px)`; } }, {passive: false});
-    sheetHandle.addEventListener('touchend', () => { if (!isDragging) return; isDragging = false; sheet.style.transition = 'transform 0.35s cubic-bezier(0.15, 0.85, 0.3, 1)'; if ((currentY - startY) > 100) closeSheet(); else sheet.style.transform = 'translateY(0)'; startY = 0; });
+
+    // Attach to the entire sheet to catch swipes
+    sheet.addEventListener('touchstart', (e) => {
+      // If content is scrolled down, don't drag sheet
+      const content = document.querySelector('.sheet-content');
+      if (content.contains(e.target) && content.scrollTop > 0) {
+        isDragging = false; return;
+      }
+      
+      startY = e.touches[0].clientY;
+      isDragging = true;
+      sheet.style.transition = 'none';
+    }, {passive: true});
+
+    sheet.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      currentY = e.touches[0].clientY;
+      const delta = currentY - startY;
+      
+      if (delta > 0) { // Only drag down
+        e.preventDefault();
+        sheet.style.transform = `translateY(${delta}px)`;
+      }
+    }, {passive: false});
+
+    sheet.addEventListener('touchend', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      sheet.style.transition = 'transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1)';
+      
+      const delta = currentY - startY;
+      if (delta > 60) { // Easy close threshold
+        closeSheet();
+      } else {
+        sheet.style.transform = 'translateY(0)';
+      }
+      startY = 0;
+    });
   </script>
 </body>
 </html>
